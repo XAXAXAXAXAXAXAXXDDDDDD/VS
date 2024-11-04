@@ -1,0 +1,65 @@
+<!--
+Testclient to show that the webservcie starting point delievers
+HTML- or XML-Format depending on the Accept-Header sent by the Client
+-->
+<!DOCTYPE html>
+<html>
+  <head> 
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <script>
+      var XHR = null;
+      var urlserver = "/GuestbookJaxrsServer/";
+
+      function xmlTextToHtml(xmltext) {
+        var replaced1 = xmltext;
+        replaced1=replaced1.replace(/></g,"&gt;bbbbbrrrrr&lt;");
+        replaced1=replaced1.replace(/</g,"&lt;");
+        replaced1=replaced1.replace(/bbbbbrrrrr/g,"<br>");
+
+      return replaced1;
+    }
+
+      function getXMLServiceDescriptionAjaxFct() {
+        try {
+          XHR = new XMLHttpRequest();
+          if (XHR == null) {
+            alert("Error: Cannot create XMLHttpRequest-Object");
+          }
+          var url = urlserver;
+          XHR.open('GET', url, true);
+          XHR.onreadystatechange = responseHandlerXMLServiceDescriptionAjaxFct;
+          var payload = null;
+          XHR.setRequestHeader("Accept", "text/xml");
+          XHR.send(payload);
+          var alerttext = "HTTP-Request with method='GET' and Accept='text/xml' is sent:" + url;
+          //alert(alerttext);
+
+        } catch (e) {
+          alert(e);
+        } // catch
+      }
+      function responseHandlerXMLServiceDescriptionAjaxFct() {
+        var res;
+        var localReadyState = XHR.readyState;
+        if (localReadyState == 4) {
+          res = XHR.responseXML;
+          if (res == null) {
+            var newContent = "<html><p>Error:: responseXML = null</p></html>";
+            document.getElementById("content").innerHTML = newContent;
+            return;
+          }
+
+          htmlContent = xmlTextToHtml(XHR.responseText);
+          var newContent = "<html><p>Content of Response of REST-Request with <br />HTTP-Request-Header<br />"
+                  + "Accept: text/xml<hr /></p>" + htmlContent + "</html>";
+          document.getElementById("content").innerHTML = newContent;
+        } // if
+      } // responseHandlerXMLServiceDescriptionAjaxFct()
+    </script>
+  </head>
+  <body onload="getXMLServiceDescriptionAjaxFct()">
+    <div id="content"></div>
+
+  </body>
+</html>

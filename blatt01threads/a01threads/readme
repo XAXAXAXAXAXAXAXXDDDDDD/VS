@@ -1,0 +1,18 @@
+Autor: Kai Bechmann
+Verteilte Systeme WS 2023
+Blatt 01: Arbeitsumgebung Linux, Threads, Synchronisation
+Aufgabe 01
+
+Vorbedingung:
+	Das aktuelle Arbeitsverzeichnis ist blatt01threads/a01threads
+
+Generieranleitung:
+	1. Generieren des ausführbaren Programms mit
+		javac -cp build/classes -d build/classes/ src/threadslernen/aufgabe1/HelloWorld.java
+Installationsanleitung:
+	Entfällt. Die Dateien sind direkt nach Generierung ausführbar.
+	
+Bedienungsanleitung:
+	1. Start des ausführbaren Programms mit
+		java -cp build/classes threadslernen/aufgabe1/HelloWorld <arg1> <arg2> ... <argN>
+			arg1 ... argN sind beliebige Konsolenargumente zum Testen.

@@ -1,0 +1,32 @@
+Autor: Kai Bechmann
+Verteilte Systeme WS 2023
+Blatt 03: Arbeitsumgebung Linux, Java-RMI-Programmierung
+Aufgabe 01
+
+Vorbedingung:
+	Das aktuelle Arbeitsverzeichnis ist blatt03rmi/a01rmi
+
+Generieranleitung:
+	1. Generieren des ausführbaren Programms mit
+		javac -cp build/classes -d build/classes/ src/rmilernen/rmibasic/LongRemoteDataType.java
+		javac -cp build/classes -d build/classes/ src/rmilernen/rmibasic/LongRemoteObj.java
+		javac -cp build/classes -d build/classes/ src/rmilernen/rmibasic/Basic.java
+		
+		javac -cp build/classes -d build/classes/ src/rmilernen/rmibasic/Client.java
+		javac -cp build/classes -d build/classes/ src/rmilernen/rmibasic/Server.java
+		
+Installationsanleitung:
+	Entfällt. Die Dateien sind direkt nach Generierung ausführbar.
+	
+Bedienungsanleitung:
+	1. Start der RMI-Registry mit 
+		rmiregistry -J-Djava.rmi.server.codebase=file:/home/kai/Desktop/vs2023-bechmann-kai/blatt03rmi/a01rmi/build/classes/
+
+	2. Start des Servers mit
+		java -cp build/classes/ -Djava.rmi.server.codebase=file:/home/kai/Desktop/vs2023-bechmann-kai/blatt03rmi/a01rmi/build/classes/ rmilernen/rmibasic/Server
+		Anmerkung: absoluter Pfad muss angepasst werden an eigenes Verzeichnis! 
+			
+	3. Start des Clients mit 
+		java -cp build/classes/ rmilernen/rmibasic/Client <Remote Obj. Name> <shutdown server at end>
+		wobei <shutdown server at end> boolean (true / false)
+

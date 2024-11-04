@@ -1,0 +1,19 @@
+Autor: Kai Bechmann
+Verteilte Systeme WS 2023
+Blatt 02: Socketprogrammierung
+
+Definition des Protokolls zur Kommunikation: 
+
+Aufbau Request-Nachricht: 
+
+Teil 	| 		Groesse in B		|		Datentyp		|		Bedeutung
+1	|	2		 		|	uint16_t (short)		| 	Funktionsnummer 
+2	|	4		 		|	uint32_t (int)			| 	Simulationsdauer in ms 
+3	|	4		 		|	uint32_t (int)			| 	Textlaenge des Parametertextes
+4	|	x		 		|	Zeichenketten			| 	Bytes der Parameterzeichenkette Parametertext
+
+Aufbau Response-Nachricht: 
+
+Teil 	| 		Groesse in B		|		Datentyp		|		Bedeutung
+1	|	4		 		|	uint32_t (int)			| 	Textlaenge des Ergebnistextes
+2	|	x		 		|	Zeichenketten			| 	Bytes der Ergebniszeichenkette

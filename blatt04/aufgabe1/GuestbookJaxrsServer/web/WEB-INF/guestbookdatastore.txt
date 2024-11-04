@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<java version="17.0.9" class="java.beans.XMLDecoder">
+ <object class="guestbook.model.GuestbookEntries" id="GuestbookEntries0">
+  <void property="entryList">
+   <void method="add">
+    <object class="guestbook.model.GuestbookEntry">
+     <void property="author">
+      <string>Kai</string>
+     </void>
+     <void property="date">
+      <object class="java.util.Date">
+       <long>1704748599989</long>
+      </object>
+     </void>
+     <void property="id">
+      <int>29</int>
+     </void>
+     <void property="msg">
+      <string>Test
+</string>
+     </void>
+    </object>
+   </void>
+   <void method="add">
+    <object class="guestbook.model.GuestbookEntry">
+     <void property="author">
+      <string>test</string>
+     </void>
+     <void property="date">
+      <object class="java.util.Date">
+       <long>1704545007202</long>
+      </object>
+     </void>
+     <void property="id">
+      <int>30</int>
+     </void>
+     <void property="msg">
+      <string>test</string>
+     </void>
+    </object>
+   </void>
+   <void method="add">
+    <object class="guestbook.model.GuestbookEntry">
+     <void property="author">
+      <string>Super</string>
+     </void>
+     <void property="date">
+      <object class="java.util.Date">
+       <long>1704748607315</long>
+      </object>
+     </void>
+     <void property="id">
+      <int>31</int>
+     </void>
+     <void property="msg">
+      <string>Duper</string>
+     </void>
+    </object>
+   </void>
+  </void>
+  <void property="idcounter">
+   <int>31</int>
+  </void>
+ </object>
+</java>

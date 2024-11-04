@@ -1,0 +1,25 @@
+Autor: Kai Bechmann
+Verteilte Systeme WS 2023
+Blatt 02: Socketprogrammierung
+Aufgabe 02
+
+Vorbedingung:
+	Das aktuelle Arbeitsverzeichnis ist blatt02sockets/a02sockets
+
+Generieranleitung:
+	1. Generieren des ausführbaren Programms mit
+		javac -cp build/classes -d build/classes/ ../a01sockets/src/socketslernen/general/Request.java
+		javac -cp build/classes -d build/classes/ ../a01sockets/src/socketslernen/general/Response.java
+		javac -cp build/classes -d build/classes/ ../a01sockets/src/socketslernen/general/TextumwandlungInterface.java
+		javac -cp build/classes -d build/classes/ ../a01sockets/src/socketslernen/general/HelperSimulation.java
+		
+		javac -cp build/classes -d build/classes/ src/socketslernen/client/TcpTextumwandlungClient.java
+Installationsanleitung:
+	Entfällt. Die Dateien sind direkt nach Generierung ausführbar.
+	
+Bedienungsanleitung:
+	1. Start des ausführbaren Programms mit
+		java -cp build/classes socketslernen/client/TcpTextumwandlungClient <host> <port> 
+			host ist IP-Addresse des TcpTextumwandlungServer (localhost z.b.) 
+			port ist der Port des TcpTextumwandlungServer (52010)
+

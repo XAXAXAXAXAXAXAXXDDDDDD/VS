@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>GuestbookJaxrs-Client: Web-Anwendung</title>
+        <style>
+            .code {
+                color:blue;
+                font-family: monospace
+            }
+            table {
+                border-style: solid;
+                width: 1px;
+            }
+        </style>
+        <script>
+            var XHR = null;
+            var urlserver = "/GuestbookJaxrsServer/webresources/";
+
+            function xmlTextToHtml(xmltext) {
+                var replaced1 = xmltext;
+                replaced1 = replaced1.replace(/></g, "&gt;bbbbbrrrrr&lt;");
+                replaced1 = replaced1.replace(/</g, "&lt;");
+                replaced1 = replaced1.replace(/bbbbbrrrrr/g, "<br>");
+
+                return replaced1;
+            }
+
+            function plainTextToHtml(text) {
+                var replaced1 = text;
+                replaced1 = replaced1.replace(/\n/g, "<br>");
+                return replaced1;
+            }
+
+            function createAjaxFct(elem) {
+                clearAll();
+
+                try {
+                    XHR = new XMLHttpRequest();
+                    if (XHR == null) {
+                        alert("Error: Cannot create XMLHttpRequest-Object");
+                    }
+                    var url = urlserver + 'guestbook/entries';
+                    XHR.open('POST', url, true);
+                    XHR.onreadystatechange = responseHandlerAjaxFct;
+                    var payload = null;
+                    payload = "msg=" + elem.msg.value;
+                    payload = payload + "&";
+                    payload = payload + "name=" + elem.name.value;
+                    /*     XHR.setRequestHeader("Content-Type","application/xml"); */ /* wss, 20161004: fehlerbehebung Typ */
+                    XHR.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                    XHR.send(payload);
+                    var alerttext = "HTTP-Request with method='POST' is sent:" + url;
+                    //alert(alerttext);
+                    setProtocolMessage(alerttext);
+
+                } catch (e) {
+                    alert(e);
+                } // catch
+            }
+            function modifyAjaxFct(elem) {
+                clearAll();
+
+                try {
+                    XHR = new XMLHttpRequest();
+                    if (XHR == null) {
+                        alert("Error: Cannot create XMLHttpRequest-Object");
+                    }
+                    var url = urlserver + 'guestbook/entries/' + elem.identry.value;
+                    XHR.open('PUT', url, true);
+                    XHR.onreadystatechange = responseHandlerAjaxFct;
+                    var payload = null;
+                    payload = "msg=" + elem.msg.value;
+                    payload = payload + "\n&";
+                    payload = payload + "name=" + elem.name.value;
+                    /* set encoding of payload */
+                    XHR.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+                    XHR.send(payload);
+                    var alerttext = "HTTP-Request with method='PUT' is sent:" + url;
+                    //alert(alerttext);
+                    setProtocolMessage(alerttext);
+
+                } catch (e) {
+                    alert(e);
+                } // catch
+            }
+            function deleteAjaxFct(elem) {
+                clearAll();
+
+                var idvar = elem.identry.value;
+                // alert(idvar);
+                if (idvar == null || idvar == "") {
+                    idvar = 0;
+                }
+                try {
+                    XHR = new XMLHttpRequest();
+                    if (XHR == null) {
+                        alert("Error: Cannot create XMLHttpRequest-Object");
+                    }
+                    var url = urlserver + 'guestbook/entries/' + idvar;
+                    XHR.open('DELETE', url, true);
+                    XHR.onreadystatechange = responseHandlerAjaxFct;
+                    XHR.send(null); // empty payload
+                    var alerttext = "HTTP-Request with method='DELETE' is sent:" + url;
+                    //alert(alerttext);
+                    setProtocolMessage(alerttext);
+
+                } catch (e) {
+                    alert(e);
+                } // catch
+            } // deleteAjaxFct()
+
+            function retrieveAjaxFct(elem) {
+                clearAll();
+
+                var idvar = elem.identry.value;
+                //alert(idvar);
+                if (idvar == null || idvar == "") {
+                    idvar = 0;
+                }
+                try {
+                    XHR = new XMLHttpRequest();
+                    if (XHR == null) {
+                        alert("Error: Cannot create XMLHttpRequest-Object");
+                    }
+                    var url = urlserver + 'guestbook/entries/' + idvar;
+                    XHR.open('GET', url, true);
+                    XHR.onreadystatechange = responseHandlerAjaxFct;
+                    XHR.setRequestHeader("Accept", "application/xml");
+                    XHR.send(null); // empty payload
+                    var alerttext = "HTTP-Request with method='GET' is sent:" + url;
+                    // alert(alertext);
+                    setProtocolMessage(alerttext);
+                } catch (e) {
+                    alert(e);
+                } // catch
+            } // retrieveAjaxFct()
+
+            function searchAjaxXMLFct(elem) {
+                clearAll();
+
+                var namevar = elem.name.value;
+                //alert(namevar);
+                if (namevar == null) {
+                    namevar = "";
+                }
+                try {
+                    XHR = new XMLHttpRequest();
+                    if (XHR == null) {
+                        alert("Error: Cannot create XMLHttpRequest-Object");
+                    }
+                    var url = urlserver + 'guestbook/entries/search?name=' + namevar;
+                    XHR.open('GET', url, true);
+                    XHR.onreadystatechange = responseHandlerSearchXMLAjaxFct;
+                    XHR.setRequestHeader("Accept", "application/xml");
+                    XHR.send(null); // empty payload
+                    var alerttext = "HTTP-Request with method='GET' is sent:" + url;
+                    // alert(alertext);
+                    setProtocolMessage(alerttext);
+                } catch (e) {
+                    alert(e);
+                } // catch
+            } // searchAjaxFct()
+
+            function searchAjaxPlainFct(elem) {
+                clearAll();
+
+                var namevar = elem.name.value;
+                //alert(namevar);
+                if (namevar == null) {
+                    namevar = "";
+                }
+                try {
+                    XHR = new XMLHttpRequest();
+                    if (XHR == null) {
+                        alert("Error: Cannot create XMLHttpRequest-Object");
+                    }
+                    var url = urlserver + 'guestbook/entries/search?name=' + namevar;
+                    XHR.open('GET', url, true);
+                    XHR.onreadystatechange = responseHandlerSearchPlainAjaxFct;
+                    XHR.setRequestHeader("Accept", "text/plain");
+                    XHR.send(null); // empty payload
+                    var alerttext = "HTTP-Request with method='GET' is sent:" + url;
+                    // alert(alertext);
+                    setProtocolMessage(alerttext);
+                } catch (e) {
+                    alert(e);
+                } // catch
+            } // searchAjaxFct()
+
+            function listallAjaxFct(elem, mode) {
+                clearAll();
+                try {
+                    XHR = new XMLHttpRequest();
+                    if (XHR == null) {
+                        alert("Error: Cannot create XMLHttpRequest-Object");
+                    }
+                    var url = urlserver + "guestbook/entries";
+                    var acceptheadervalue;
+                    var responsehandler;
+                    if (mode == "xml") {
+                        acceptheadervalue = "application/xml";
+                        responsehandler = responseHandlerListAllXmlAjaxFct;
+                    } else {
+                        acceptheadervalue = "text/plain";
+                        responsehandler = responseHandlerListAllPlainAjaxFct;
+                    }
+
+                    XHR.open('GET', url, true);
+                    XHR.onreadystatechange = responsehandler;
+                    var payload = null;
+                    XHR.setRequestHeader("Accept", acceptheadervalue);
+                    XHR.send(payload);
+                    var alerttext = "HTTP-Request with method='GET' and Accept='" + acceptheadervalue + "' is sent:" + url;
+                    //alert(alerttext);
+                    setProtocolMessage(alerttext);
+
+                } catch (e) {
+                    alert(e);
+                } // catch
+            }
+
+
+
+            function responseHandlerAjaxFct() {
+                var res;
+                var localReadyState = XHR.readyState;
+                if (localReadyState == 4) {
+                    res = XHR.responseXML;
+                    if (res == null) {
+                        setProtocolMessage("Error:: responseXML = null");
+                        updateProtocolMessage(buildResponseMessageHelper(XHR));
+                        return;
+                    }
+                    // parse XML document
+                    var docelem = res.documentElement;
+                    if (docelem.nodeName != "guestbookentry") {
+                        setProtocolMessage("Error:: responseXML has wrong format. Root element wrong name:" + docelem.nodeName);
+                        updateProtocolMessage(buildResponseMessageHelper(XHR));
+                        return;
+                    }
+                    var childs = docelem.childNodes;
+
+                    for (i = 0; i < childs.length; i++) {
+                        var fc = childs[i].firstChild;
+                        var nodeVal;
+                        (fc != null ? nodeVal = fc.nodeValue : nodeVal = "");
+
+                        if (childs[i].nodeName == "id") {
+                            setResultEntryId(nodeVal);
+                        }
+                        if (childs[i].nodeName == "author") {
+                            setResultEntryName(nodeVal);
+                        }
+                        if (childs[i].nodeName == "msg") {
+                            setResultEntryText(nodeVal);
+                        }
+                        if (childs[i].nodeName == "date") {
+                            setResultEntryDate(nodeVal);
+                        }
+                    } // for           
+
+                    updateProtocolMessage(buildResponseMessageHelper(XHR));
+
+                } // if
+            } //responseHandlerAjaxFct()
+
+            function responseHandlerSearchXMLAjaxFct() {
+                responseHandlerListXMLRepresentationHelper();
+            } // responseHandlerSearchAjaxFct()
+            function responseHandlerSearchPlainAjaxFct() {
+                responseHandlerListPlainRepresentationHelper();
+            } // responseHandlerSearchAjaxFct()
+
+            function responseHandlerListAllXmlAjaxFct() {
+                responseHandlerListXMLRepresentationHelper();
+            }
+            function responseHandlerListAllPlainAjaxFct() {
+                responseHandlerListPlainRepresentationHelper();
+            }
+
+            function responseHandlerListPlainRepresentationHelper() {
+                console.log("called responseHandlerListPlainRepresentationHelper()");
+                var res;
+                var localReadyState = XHR.readyState;
+                if (localReadyState == 4) {
+                    res = XHR.responseText;
+                    if (res == null) {
+                        setProtocolMessage("Error:: responseText = null");
+                        updateProtocolMessage(buildResponseMessageHelper(XHR));
+                        return;
+                    }
+                    var htmlContent;
+                    console.log(res);
+                    htmlContent = plainTextToHtml(res);
+                    var newContent = "<p>Content of Response of REST-Request with <br />HTTP-Request-Header<br />"
+                            + "Accept: text/plain <hr /></p>" + "<div>" + htmlContent + "</div>";
+                    setResultElemListText(newContent);
+                }
+            } // responseHandlerXMLRepresentationAjaxFct()
+            function responseHandlerListXMLRepresentationHelper() {
+                console.log("called responseHandlerListXMLRepresentationHelper()");
+                var res;
+                var localReadyState = XHR.readyState;
+                if (localReadyState == 4) {
+                    res = XHR.responseXML;
+                    if (res == null) {
+                        setProtocolMessage("Error:: responseXML = null");
+                        updateProtocolMessage(buildResponseMessageHelper(XHR));
+                        return;
+                    }
+
+                    htmlContent = xmlTextToHtml(XHR.responseText);
+                    var newContent = "<p>Content of Response of REST-Request with <br />HTTP-Request-Header<br />"
+                            + "Accept: application/xml <hr /></p>" + "<div>" + htmlContent + "</div>";
+                    //         document.getElementById("content").innerHTML = newContent;
+                    // document.open();
+                    // document.writeln(newContent);
+                    // document.close();
+                    setResultElemListText(newContent);
+                } // if
+            } // responseHandlerXMLRepresentationAjaxFct()
+
+            function buildResponseMessageHelper(XHR) {
+                var msg = "";
+                var headername;
+                msg = "<br />" + "Reponse code: " + XHR.status;
+                headername = "Location";
+                msg = msg + "<br />" + "Reponse header " + headername + ": " + XHR.getResponseHeader(headername);
+                headername = "Content-Type";
+                msg = msg + "<br />" + "Reponse header " + headername + ": " + XHR.getResponseHeader(headername);
+                return msg;
+
+            }
+
+            function setProtocolMessage(txt) {
+                var elem = document.getElementById("protocolmsg");
+                elem.innerHTML = txt;
+            }
+            function updateProtocolMessage(txt) {
+                setProtocolMessage(getProtocolMessage() + txt);
+            }
+            function getProtocolMessage(txt) {
+                var elem = document.getElementById("protocolmsg");
+                return elem.innerHTML;
+            }
+            function clearProtocolMessage() {
+                var elem = document.getElementById("protocolmsg");
+                elem.innerHTML = "undefined";
+            }
+            function clearResultEntry() {
+                var elem = document.getElementById("resultid");
+                elem.innerHTML = "undefined";
+                elem = document.getElementById("resultname");
+                elem.innerHTML = "undefined";
+                elem = document.getElementById("resulttext");
+                elem.innerHTML = "undefined";
+                elem = document.getElementById("resultdate");
+                elem.innerHTML = "undefined";
+            }
+            function setResultEntryId(txt) {
+                var elem = document.getElementById("resultid");
+                elem.innerHTML = txt;
+            }
+            function setResultEntryName(txt) {
+                var elem = document.getElementById("resultname");
+                elem.innerHTML = txt;
+            }
+            function setResultEntryText(txt) {
+                var elem = document.getElementById("resulttext");
+                elem.innerHTML = txt;
+            }
+            function setResultEntryDate(txt) {
+                var elem = document.getElementById("resultdate");
+                elem.innerHTML = txt;
+            }
+
+            function hideResultFct() {
+                document.getElementById("content").innerHTML = "";
+            }
+
+            function setResultElemListText(txt) {
+                var elem = document.getElementById("resultelemlisttext");
+                elem.innerHTML = txt;
+            }
+            function clearResultElemListText() {
+                var elem = document.getElementById("resultelemlisttext");
+                elem.innerHTML = "undefined";
+            }
+
+            function setResultContentText(txt) {
+                var elem = document.getElementById("content");
+                elem.innerHTML = txt;
+            }
+
+            function clearAll() {
+                clearResultEntry();
+                clearProtocolMessage();
+                clearResultElemListText();
+            }
+        </script>
+    </head>
+    <body>
+        <div id="content"></div>
+        <h3>GuestbookJaxrs-Client: Web-Anwendung</h3>
+        <table><tr><td>
+                    <h4>Alle Eintr&auml;ge auflisten</h4>
+                    <table><tr>
+                            <td> <input type="button" onclick="listallAjaxFct(this, 'xml');" value="Auflisten XML" /> </td>
+                            <td> <input type="button" onclick="listallAjaxFct(this, 'plain');" value="Auflisten PLAIN" /> </td>
+                        </tr>
+                    </table>
+
+
+                </td><td> 
+                    <h4>Suche Eintrag per Namen</h4>
+                    <form method="post" action="." onsubmit="searchAjaxPlainFct(this);
+                       return false">
+                        <table>
+                            <tr><td>Name</td><td><input type="text" name="name" value=""/></td>
+                            </tr>
+                            <tr><td>&nbsp;</td><td>
+                                    <input type="submit" value="Suchen Plain" />
+                                </td></tr></table>
+                    </form>
+                    <form method="post" action="." onsubmit="searchAjaxXMLFct(this);
+                  return false">
+                        <table>
+                            <tr><td>Name</td><td><input type="text" name="name" value=""/></td>
+                            </tr>
+                            <tr><td>&nbsp;</td><td>
+                                    <input type="submit" value="Suchen XML" />
+                                </td></tr></table>
+                    </form>
+                </td></tr>
+            <tr><td>
+                    <h4>Erzeuge Eintrag</h4>
+                    <form method="post" action="." onsubmit="createAjaxFct(this);
+                  return false">
+                        <table>
+                            <tr><td>Name</td><td><input type="text" name="name" /></td>
+                            </tr>
+                            <tr><td>Text</td><td><input type="text" name="msg" /></td>
+                            </tr>
+                            <tr><td>&nbsp;</td><td><input type="submit" name="create" value="Erzeugen"/></td>
+                            </tr>
+                        </table>
+                    </form>
+                </td><td>
+                    <h4>Modifiziere Eintrag</h4>
+                    <form method="post" action="." onsubmit="modifyAjaxFct(this);
+                  return false">
+                        <table>
+                            <tr>
+                                <td>ID</td><td><input type="text" name="identry" /></td>
+                            </tr>
+                            <tr>
+                                <td>Name</td><td><input type="text" name="name" /></td>
+                            </tr>
+                            <tr><td>Text</td><td><input type="text" name="msg" /></td>
+                            </tr>
+                            <tr><td>&nbsp;</td><td><input type="submit" name="modify" value="Modifizieren"/></td>
+                            </tr>
+                        </table>
+                    </form>
+                </td></tr>
+            <tr><td>
+                    <h4>L&ouml;sche Eintrag</h4>
+                    <form method="post" action="." onsubmit="deleteAjaxFct(this);
+                  return false">
+                        <table>
+                            <tr><td>ID</td><td><input type="text" name="identry" value=""/></td>
+                            </tr>
+                            <tr><td>&nbsp;</td><td><input type="submit" name="delete" value="L&ouml;schen"/></td>
+                            </tr>
+                        </table>
+                    </form>
+                </td><td>
+                    <h4>Hole Eintrag per ID</h4>
+                    <form method="post" action="." onsubmit="retrieveAjaxFct(this);
+                  return false">
+                        <table>
+                            <tr><td>ID</td><td><input type="text" name="identry" value=""/></td>
+                            </tr>
+                            <tr><td>&nbsp;</td><td><input type="submit" name="retrieve" value="Holen"/></td>
+                            </tr>
+                        </table>
+                    </form>
+                </td></tr>
+        </table>
+        <p>Resultat der letzten Aktion:</p>
+        <table style="width:600px">
+            <tr><td>ID:</td><td id="resultid">&nbsp;</td></tr>
+            <tr><td>Name:</td><td id="resultname">&nbsp;</td></tr>
+            <tr><td>Text:</td><td id="resulttext">&nbsp;</td></tr>
+            <tr><td>Date:</td><td id="resultdate">&nbsp;</td></tr>
+        </table>
+        <p id="msgp">Meldung: <span id="protocolmsg"></span></p>
+        <hr>
+        <p id="resultelemlisttextp">Ergebnisliste:<br> <span id="resultelemlisttext"></span></p>
+    </body>
+</html>

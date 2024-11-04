@@ -1,0 +1,49 @@
+Autor: Kai Bechmann
+Verteilte Systeme WS 2023
+Blatt 03: Arbeitsumgebung Linux, Java-RMI-Programmierung
+Aufgabe 04
+
+Anmerkung: Absolute Pfade muessen an eigene Verzeichnisstruktur angepasst werden!
+
+Vorbedingung:
+	Das aktuelle Arbeitsverzeichnis ist blatt03rmi/a04rmi
+
+Generieranleitung:
+	1. Generieren der ausfuehrbaren Dateien fuer Aufgabe 01 - 03 analog zu deren readme Dateien.
+
+Bedienungsanleitung:
+	1. Start der RMI-Registry mit 
+		rmiregistry -J-Djava.rmi.server.codebase="file:/home/kai/Desktop/vs2023-bechmann-kai/blatt03rmi/a01rmi/build/classes/ file:/home/kai/Desktop/vs2023-bechmann-kai/blatt03rmi/a02rmi/build/classes/ file:/home/kai/Desktop/vs2023-bechmann-kai/blatt03rmi/a03rmi/build/classes/"
+
+	
+	2. Start der Server mit
+		java -cp ../a01rmi/build/classes/ -Djava.rmi.server.codebase=file:/home/kai/Desktop/vs2023-bechmann-kai/blatt03rmi/a01rmi/build/classes/ rmilernen/rmibasic/Server
+		java -cp ../a02rmi/build/classes/ -Djava.rmi.server.codebase=file:/home/kai/Desktop/vs2023-bechmann-kai/blatt03rmi/a02rmi/build/classes/ rmilernen/rmibasicplus/Server	
+		java -cp ../a03rmi/build/classes/ -Djava.rmi.server.codebase=file:/home/kai/Desktop/vs2023-bechmann-kai/blatt03rmi/a03rmi/build/classes/ rmilernen/rmibasicandplus/Server
+			
+	3. Start der Clients mit 
+		java -cp ../a01rmi/build/classes/ rmilernen/rmibasic/Client 01Basic false
+		java -cp ../a02rmi/build/classes/ rmilernen/rmibasicplus/Client 02BasicPlus 2 /home/kai/Desktop/vs2023-bechmann-kai/blatt03rmi/a02rmi/src/rmilernen/rmibasicplus/Client false
+		java -cp ../a03rmi/build/classes/ rmilernen/rmibasicandplus/Client  false
+
+	4. Start der Clients mit Shutdown
+		java -cp ../a01rmi/build/classes/ rmilernen/rmibasic/Client 01Basic true
+		java -cp ../a02rmi/build/classes/ rmilernen/rmibasicplus/Client 02BasicPlus 2 /home/kai/Desktop/vs2023-bechmann-kai/blatt03rmi/a02rmi/src/rmilernen/rmibasicplus/Client true
+		java -cp ../a03rmi/build/classes/ rmilernen/rmibasicandplus/Client  true
+	
+
+Inhalt der RMI Registry, nachdem die Remote Objekte registriert wurden: 
+
+Remote-Objektname		|	Implementierungsklasse				| 	Interfaces
+				|							|
+01Basic 			|	rmilernen.rmibasic.Server			|	rmilernen.rmibasic.Basic
+02BasicPlus 			|	rmilernen.rmibasicplus.Server			|	rmilernen.rmibasicplus.BasicPlus
+03Basic 			|	rmilernen.rmibasic.Server			|	rmilernen.rmibasic.Basic
+03BasicPlus 			|	rmilernen.rmibasicplus.Server			|	rmilernen.rmibasic.BasicPlus
+03BasicAndPlus 			|	rmilernen.rmibasicandplus.Server		|	rmilernen.rmibasic.Basic UND rmilernen.rmibasic.BasicPlus
+
+Nach Methodenaufruf rmiIncrement von rmilernen.rmibasic.Basic in Client aus Aufgabe 1 und 3:
+01long_remote 			|	rmilernen.rmibasic.LongRemoteObj		|	rmilernen.rmibasic.LongRemoteDataType
+03long_remote 			|	rmilernen.rmibasic.LongRemoteObj		|	rmilernen.rmibasic.LongRemoteDataType
+
+
